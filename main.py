@@ -265,15 +265,6 @@ class EmailBot:
         except Exception as e:
             print(f"No popup")
 
-    def verifyIdentity(self):
-        self.emailCode()
-        self.sleep_random()
-        self.reEnterConfirmEmail("dfnxwrnm70@mailforspam.com")
-        self.sleep_random()
-        self.clickSubmitButton()
-        self.sleep_random()
-        self.getCode()
-
     def switchToggle(self):
         try:
             time.sleep(10)
@@ -470,7 +461,7 @@ class EmailBot:
             self.sleep_random()
             print("SelectInputOption Done")
         except Exception as e:
-            print(f"error => {e}")
+            print(f"error => {str(e)}")
 
     def verifyCode(self):
         try:
@@ -484,79 +475,114 @@ class EmailBot:
             print("Verify Code Done")
             self.sleep_random()
         except Exception as e:
-            print(f"error => {e}")
+            print(f"error => {str(e)}")
 
-    def enableForwarding(self, comfirmation_email, forward_to):
-        self.sleep_random()
-        self.closePopUp()
-        self.sleep_random()
-        self.goToSettings()
-        self.sleep_random()
-        self.settingFw()
-        self.sleep_random()
+    def enableForwarding(self, confirmation_email, forward_to):
+        """
+        Function to enable email forwarding in Outlook Live settings.
 
-        # Asking for verification again
-        self.emailCode()
-        self.sleep_random()
-        self.reEnterConfirmEmail(comfirmation_email)
-        self.sleep_random()
-        self.clickSubmitButton()
-        self.sleep_random()
+        Args:
+            confirmation_email (str): The email address used for confirmation.
+            forward_to (str): The email address to forward emails to.
+        """
+        try:
+            self.sleep_random()
+            self.closePopUp()  # Close any pop-up windows
+            self.sleep_random()
+            self.goToSettings()  # Navigate to settings
+            self.sleep_random()
+            self.settingFw()  # Navigate to forwarding settings
+            self.sleep_random()
 
-        # Get Code Again
-        self.getCode(3, comfirmation_email)
-        self.sleep_random()
-        self.verifyCode()
-        self.sleep_random()
-        self.breakFromPassword()
-        self.sleep_random()
+            # Asking for verification again
+            self.emailCode()  # Request verification code
+            self.sleep_random()
+            self.reEnterConfirmEmail(confirmation_email)  # Re-enter confirmation email
+            self.sleep_random()
+            self.clickSubmitButton()  # Click submit button
+            self.sleep_random()
 
-        # Continue with Forwarding
-        self.sleep_random()
-        self.closePopUp()
-        self.sleep_random()
-        self.switchToggle()
-        self.sleep_random()
-        self.forwardTo(forward_to)
-        self.selectCopy()
+            # Get Code Again
+            self.getCode(3, confirmation_email)  # Retrieve verification code again
+            self.sleep_random()
+            self.verifyCode()  # Verify the code
+            self.sleep_random()
+            self.breakFromPassword()  # Break from password input
+            self.sleep_random()
 
-        # Add New Rule
-        self.navigateToRules()
-        self.sleep_random()
-        self.addNewRule()
-        self.sleep_random()
-        self.inputRuleName()
-        self.sleep_random()
-        self.addCondition()
-        self.sleep_random()
-        self.applyToAll()
-        self.sleep_random()
-        self.addAction()
-        self.sleep_random()
-        self.actionList()
-        self.enterForwardEmail(forward_to)
+            # Continue with Forwarding
+            self.sleep_random()
+            self.closePopUp()  # Close any pop-up windows
+            self.sleep_random()
+            self.switchToggle()  # Toggle forwarding switch
+            self.sleep_random()
+            self.forwardTo(forward_to)  # Set forwarding address
+            self.sleep_random()
+            self.selectCopy()  # Select 'keep a copy' option
 
-    def getCode(self, tab, comfirmation_email):
-        self.newTab(tab)
-        self.driver.get("https://mailforspam.com")
-        self.emailForCode(comfirmation_email)
-        self.sleep_random()
-        self.clickForCode()
-        self.sleep_random()
-        security_code = self.getSecurityCode()
-        self.sleep_random()
+            # Add New Rule
+            self.navigateToRules()  # Navigate to rules settings
+            self.sleep_random()
+            self.addNewRule()  # Add a new rule
+            self.sleep_random()
+            self.inputRuleName()  # Input rule name
+            self.sleep_random()
+            self.addCondition()  # Add a condition
+            self.sleep_random()
+            self.applyToAll()  # Apply the rule to all emails
+            self.sleep_random()
+            self.addAction()  # Add an action
+            self.sleep_random()
+            self.actionList()  # Select forwarding action
+            self.sleep_random()
+            self.enterForwardEmail(forward_to)  # Enter email to forward to
+        except Exception as e:
+            print(f"Error while setting email forwarding => {str(e)}")
 
-        # Switch to the new tab
-        self.driver.switch_to.window(self.driver.window_handles[1])
+    def getCode(self, tab, confirmation_email):
+        """
+        Function to retrieve verification code from a temporary email service.
 
-        self.sleep_random()
-        self.enterSecurityCode(security_code)
-        self.sleep_random()
+        Args:
+            tab (int): The index of the tab to open.
+            confirmation_email (str): The email address used for confirmation.
+        """
+        try:
+            self.newTab(tab)  # Open a new tab
+            self.driver.get("https://mailforspam.com")  # Open temporary email url
+            self.emailForCode(confirmation_email)  # Enter the confirmation email
+            self.sleep_random()
+            self.clickForCode()  # Click to retrieve the code
+            self.sleep_random()
+            security_code = self.getSecurityCode()  # Get the security code
+            self.sleep_random()
 
-    def bot_main(self, email, password, comfirmation_email, forward_to):
+            # Switch to the new tab
+            self.driver.switch_to.window(self.driver.window_handles[1])
+
+            self.sleep_random()
+            self.enterSecurityCode(security_code)  # Enter the security code
+            self.sleep_random()
+        except Exception as e:
+            print(f"Error while retrieving security code => {str(e)}")
+
+    def bot_main(self, email, password, confirmation_email, forward_to):
+        """
+        Main function to automate signing in, enabling email forwarding,
+        and handling verification codes for Outlook Live email accounts.
+
+        Args:
+            email (str): The email address to sign in with.
+            password (str): The password associated with the email account.
+            confirmation_email (str): The email address used for confirmation.
+            forward_to (str): The email address to forward emails to.
+
+        Raises:
+            Exception: If any error occurs during the process.
+        """
         try:
             # Open the URL
-            url = "https://outlook.live.com/mail/0/"  # Replace this with your desired URL
+            url = "https://outlook.live.com/mail/0/"
             self.driver.get(url)
 
             # Wait for the element to be clickable
@@ -568,38 +594,39 @@ class EmailBot:
                 sign_in.click()
                 print("Sign in button clicked")
                 self.sleep_random()
-                self.switchWindow(1)
+                self.switchWindow(1)  # Switch to the new window
                 self.sleep_random()
-                self.inputEmail(email)
+                self.inputEmail(email)  # Input the email address
                 self.sleep_random()
-                self.clickNext()
+                self.clickNext()  # Click the 'Next' button after email input
                 self.sleep_random()
-                self.inputPass(password)
+                self.inputPass(password)  # Input the password
                 self.sleep_random()
-                self.clickNext()
+                self.clickNext()  # Click the 'Next' button after password input
                 self.sleep_random()
-                self.selectInputOption()
+                self.selectInputOption()  # Select the input option
                 self.sleep_random()
-                self.inputConfirmEmail(comfirmation_email)
+                self.inputConfirmEmail(confirmation_email)  # Input the confirmation email
                 self.sleep_random()
-                self.submitConfirmEmail()
+                self.submitConfirmEmail()  # Submit the confirmation email
 
                 # Verification Code
-                self.getCode(2, comfirmation_email)
-                self.submitSecurityCode()
+                self.getCode(2, confirmation_email)  # Retrieve the verification code
                 self.sleep_random()
-                self.staySignedIn()
+                self.submitSecurityCode()  # Submit the verification code
                 self.sleep_random()
-                self.breakFromPassword()
+                self.staySignedIn()  # Opt to stay signed in
+                self.sleep_random()
+                self.breakFromPassword()  # Break from the password input
 
                 # Enable Forwarding
-                self.enableForwarding(comfirmation_email, forward_to)
+                self.enableForwarding(confirmation_email, forward_to)  # Enable email forwarding
                 print("Email entered successfully")
 
             else:
                 print("no sign in button")
 
-            time.sleep(5)
+            time.sleep(5)  # Pause for 5 seconds after completion
         except Exception as e:
             print("An error occurred:", e)
 
@@ -607,3 +634,4 @@ class EmailBot:
             # Close the browser
             if 'driver' in locals():
                 self.driver.quit()
+
