@@ -1,628 +1,609 @@
 import time
 import random
 from bs4 import BeautifulSoup
-from undetected_chromedriver import Chrome, ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
 
-def sleep_random():
-    # Generate a random sleep time between 0.5 to 1 seconds
-    sleep_time = random.uniform(0.7, 1)
-    time.sleep(sleep_time)
+class EmailBot:
+    def __init__(self, driver):
+        self.driver = driver
 
+    def sleep_random(self):
+        # Generate a random sleep time between 0.5 to 1 seconds
+        sleep_time = random.uniform(0.7, 1)
+        time.sleep(sleep_time)
 
-def clickNext(driver):
-    try:
-        # Wait for the input field to be clickable
-        _next = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@data-report-value="Submit"]'))
+    def clickNext(self):
+        try:
+            # Wait for the input field to be clickable
+            _next = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@data-report-value="Submit"]'))
+            )
+            self.sleep_random()
+            _next.click()
+        except Exception as e:
+            print(f"Error => {e}")
+
+    def inputEmail(self, email):
+        try:
+            # Wait for the input field to be clickable
+            input_field = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@id="i0116"]'))
+            )
+            self.sleep_random()
+            input_field.click()
+            input_field.send_keys(email)  # Replace this with your email
+        except Exception as e:
+            print(f"Error => {e}")
+
+    def inputPass(self, password):
+        try:
+            # Wait for the input field to be clickable
+            input_field = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@type="password"]'))
+            )
+            self.sleep_random()
+            input_field.click()
+            self.sleep_random()
+            input_field.send_keys(password)  # Replace this with your email
+        except Exception as e:
+            print(f"Error => {e}")
+
+    def inputConfirmEmail(self, confirm_email):
+        try:
+            # Find the email input field using its XPath
+            email_input = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@id="iProofEmail"]'))
+            )
+            self.sleep_random()
+            if email_input:
+                email_input.send_keys(confirm_email)  # Enter email address
+                print("Email entered successfully")
+            else:
+                print("Email input field not found")
+
+        except Exception as e:
+            print(f"Error => {e}")
+
+    def submitConfirmEmail(self):
+        # Find the submit button using its XPath
+        submit_button = WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '//input[@id="iSelectProofAction"]'))
         )
-        sleep_random()
-        _next.click()
-    except Exception as e:
-        print(f"Error => {e}")
-
-
-def inputEmail(driver, email):
-    try:
-        # Wait for the input field to be clickable
-        input_field = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@id="i0116"]'))
-        )
-        sleep_random()
-        input_field.click()
-        input_field.send_keys(email)  # Replace this with your email
-    except Exception as e:
-        print(f"Error => {e}")
-
-
-def inputPass(driver, password):
-    try:
-        # Wait for the input field to be clickable
-        input_field = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@type="password"]'))
-        )
-        sleep_random()
-        input_field.click()
-        sleep_random()
-        input_field.send_keys(password)  # Replace this with your email
-    except Exception as e:
-        print(f"Error => {e}")
-
-
-def inputConfirmEmail(driver, confirm_email):
-    try:
-        # Find the email input field using its XPath
-        email_input = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@id="iProofEmail"]'))
-        )
-        sleep_random()
-        if email_input:
-            email_input.send_keys(confirm_email)  # Enter email address
-            print("Email entered successfully")
+        self.sleep_random()
+        if submit_button:
+            submit_button.click()
+            self.sleep_random()
+            print("Submit button clicked successfully")
         else:
-            print("Email input field not found")
+            print("Submit button not found")
 
-    except Exception as e:
-        print(f"Error => {e}")
-
-
-def submitConfirmEmail(driver):
-    # Find the submit button using its XPath
-    submit_button = WebDriverWait(driver, 30).until(
-        EC.element_to_be_clickable((By.XPATH, '//input[@id="iSelectProofAction"]'))
-    )
-    sleep_random()
-    if submit_button:
-        submit_button.click()
-        sleep_random()
-        print("Submit button clicked successfully")
-    else:
-        print("Submit button not found")
-
-
-def submitSecurityCode(driver):
-    # Find the submit button using its XPath
-    submit_button = WebDriverWait(driver, 30).until(
-        EC.element_to_be_clickable((By.XPATH, '//input[@id="iVerifyCodeAction"]'))
-    )
-    sleep_random()
-    if submit_button:
-        submit_button.click()
-        sleep_random()
-        print("Submit button clicked successfully")
-    else:
-        print("Submit button not found")
-
-
-def switchWindow(driver, tab):
-    # Switch to the new tab
-    driver.switch_to.window(driver.window_handles[tab])
-
-
-def newTab(driver, tab):
-    # Execute JavaScript to open a new tab
-    driver.execute_script("window.open('about:blank','_blank');")
-    sleep_random()
-    # Switch to the new tab
-    driver.switch_to.window(driver.window_handles[tab])
-
-
-def emailForCode(driver, email):
-    # Find the submit button using its XPath
-    _email = WebDriverWait(driver, 30).until(
-        EC.element_to_be_clickable((By.XPATH, '//input[@name="spammail"]'))
-    )
-    sleep_random()
-    _email.click()
-    _email.send_keys(email)
-    sleep_random()
-    _email.send_keys(Keys.RETURN)
-    sleep_random()
-
-
-def clickForCode(driver):
-    # Find the <a> element using XPath with normalize-space()
-    link_element = WebDriverWait(driver, 30).until(
-        EC.element_to_be_clickable((By.XPATH, '//a[normalize-space(text())="Microsoft account security code"]'))
-    )
-
-    sleep_random()
-    link_element.click()
-    sleep_random()
-
-
-def getSecurityCode(driver):
-    try:
-        # Get the page source
-        page_source = driver.page_source
-
-        # Parse the HTML content
-        soup = BeautifulSoup(page_source, 'html.parser')
-
-        # Find the <p> tag with id="messagebody"
-        message_body = soup.find('p', id='messagebody')
-
-        # Find the text "Security code: " within the <p> tag
-        security_code_text = message_body.find(text=lambda text: text and "Security code: " in text)
-
-        # If the text is found, extract the security code
-        if security_code_text:
-            code_index = security_code_text.find("Security code: ") + len("Security code: ")
-            code = security_code_text[code_index:].strip()
-            print("Security code:", code)
-            return code
+    def submitSecurityCode(self):
+        # Find the submit button using its XPath
+        submit_button = WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '//input[@id="iVerifyCodeAction"]'))
+        )
+        self.sleep_random()
+        if submit_button:
+            submit_button.click()
+            self.sleep_random()
+            print("Submit button clicked successfully")
         else:
-            print("Security code not found")
-    except Exception as e:
-        print(f"Error => {e}")
+            print("Submit button not found")
 
+    def switchWindow(self, tab):
+        # Switch to the new tab
+        self.driver.switch_to.window(self.driver.window_handles[tab])
 
-def enterSecurityCode(driver, code):
-    try:
-        # Find the email input field using its XPath
-        code_input = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@type="tel"]'))
+    def newTab(self, tab):
+        # Execute JavaScript to open a new tab
+        self.driver.execute_script("window.open('about:blank','_blank');")
+        self.sleep_random()
+        # Switch to the new tab
+        self.driver.switch_to.window(self.driver.window_handles[tab])
+
+    def emailForCode(self, email):
+        # Find the submit button using its XPath
+        _email = WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '//input[@name="spammail"]'))
         )
-        sleep_random()
-        if code_input:
-            code_input.send_keys(code)  # Enter email address
-            print("Email entered successfully")
-        else:
-            print("Email input field not found")
+        self.sleep_random()
+        _email.click()
+        _email.send_keys(email)
+        self.sleep_random()
+        _email.send_keys(Keys.RETURN)
+        self.sleep_random()
 
-    except Exception as e:
-        print(f"Error => {e}")
-
-
-def goToSettings(driver):
-    try:
+    def clickForCode(self):
         # Find the <a> element using XPath with normalize-space()
-        settings_ = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//button[@id="owaSettingsButton"]'))
+        link_element = WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '//a[normalize-space(text())="Microsoft account security code"]'))
         )
 
-        sleep_random()
-        settings_.click()
-        sleep_random()
-    except Exception as e:
-        print(f"error => {e}")
-
-def settingFw(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        settings_fw = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//button[normalize-space(text())="Forwarding"]'))
-        )
-
-        sleep_random()
-        settings_fw.click()
-        sleep_random()
-    except Exception as e:
-        print(f"error => {e}")
-
-def staySignedIn(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//button[@type="submit"]'))
-        )
-
-        sleep_random()
+        self.sleep_random()
         link_element.click()
-        sleep_random()
-    except Exception as e:
-        print(f"error => {e}")
+        self.sleep_random()
 
-def emailCode(driver):
-    try:
-        link_element = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//div[starts-with(text(), 'Email')]"))
-        )
+    def getSecurityCode(self):
+        try:
+            # Get the page source
+            page_source = self.driver.page_source
 
-        sleep_random()
-        link_element.click()
-        sleep_random()
-    except Exception as e:
-        print(f"error => {e}")
+            # Parse the HTML content
+            soup = BeautifulSoup(page_source, 'html.parser')
 
-def reEnterConfirmEmail(driver, confirm_email):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        settings_ = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@name="ProofConfirmation"]'))
-        )
+            # Find the <p> tag with id="messagebody"
+            message_body = soup.find('p', id='messagebody')
 
-        sleep_random()
-        settings_.click()
-        sleep_random()
-        settings_.send_keys(confirm_email)
-        sleep_random()
+            # Find the text "Security code: " within the <p> tag
+            security_code_text = message_body.find(text=lambda text: text and "Security code: " in text)
 
-    except Exception as e:
-        print(f"error => {e}")
+            # If the text is found, extract the security code
+            if security_code_text:
+                code_index = security_code_text.find("Security code: ") + len("Security code: ")
+                code = security_code_text[code_index:].strip()
+                print("Security code:", code)
+                return code
+            else:
+                print("Security code not found")
+        except Exception as e:
+            print(f"Error => {e}")
 
-def clickSubmitButton(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        submit_ = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@type="submit"]'))
-        )
+    def enterSecurityCode(self, code):
+        try:
+            # Find the email input field using its XPath
+            code_input = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@type="tel"]'))
+            )
+            self.sleep_random()
+            if code_input:
+                code_input.send_keys(code)  # Enter email address
+                print("Email entered successfully")
+            else:
+                print("Email input field not found")
 
-        sleep_random()
-        submit_.click()
-        sleep_random()
-        submit_.send_keys("kulejeqv26@mailforspam.com")
-        sleep_random()
+        except Exception as e:
+            print(f"Error => {e}")
 
-    except Exception as e:
-        print(f"error => {e}")
+    def goToSettings(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            settings_ = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//button[@id="owaSettingsButton"]'))
+            )
 
-def breakFromPassword(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        submit_ = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//a[@id="iCancel"]'))
-        )
+            self.sleep_random()
+            settings_.click()
+            self.sleep_random()
+        except Exception as e:
+            print(f"error => {e}")
 
-        sleep_random()
-        submit_.click()
-        sleep_random()
+    def settingFw(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            settings_fw = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//button[normalize-space(text())="Forwarding"]'))
+            )
 
-    except Exception as e:
-        print(f"No popup")
+            self.sleep_random()
+            settings_fw.click()
+            self.sleep_random()
+        except Exception as e:
+            print(f"error => {e}")
 
-def verifyIdentity(driver):
-    emailCode(driver)
-    sleep_random()
-    reEnterConfirmEmail(driver, "dfnxwrnm70@mailforspam.com")
-    sleep_random()
-    clickSubmitButton(driver)
-    sleep_random()
-    getCode(driver)
+    def staySignedIn(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//button[@type="submit"]'))
+            )
 
-def switchToggle(driver):
-    try:
-        time.sleep(10)
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//label[text()='Enable forwarding']"))
-        )
+            self.sleep_random()
+            link_element.click()
+            self.sleep_random()
+        except Exception as e:
+            print(f"error => {e}")
 
-        sleep_random()
-        link_element.click()
-        print("Forwarding Toggled")
-        sleep_random()
-        print("switchToggle done")
-    except Exception as e:
-        print(f"error => {e}")
+    def emailCode(self):
+        try:
+            link_element = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, "//div[starts-with(text(), 'Email')]"))
+            )
 
-def forwardTo(driver, email):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@type="text"]'))
-        )
+            self.sleep_random()
+            link_element.click()
+            self.sleep_random()
+        except Exception as e:
+            print(f"error => {e}")
 
-        sleep_random()
-        link_element.click()
-        sleep_random()
-        link_element.send_keys(email)
-        print("Email Entered For Forwarding")
-        sleep_random()
-        print("ForwardTo done")
-    except Exception as e:
-        print(f"error => {e}")
+    def reEnterConfirmEmail(self, confirm_email):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            settings_ = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@name="ProofConfirmation"]'))
+            )
 
-def selectCopy(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.XPATH, "//span[text()='Keep a copy of forwarded messages']"))
-        )
+            self.sleep_random()
+            settings_.click()
+            self.sleep_random()
+            settings_.send_keys(confirm_email)
+            self.sleep_random()
 
-        sleep_random()
-        link_element.click()
-        sleep_random()
-        print("Select Copy done")
-    except Exception as e:
-        print(f"error => {e}")
+        except Exception as e:
+            print(f"error => {e}")
 
-def navigateToRules(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        settings_fw = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//button[normalize-space(text())="Rules"]'))
-        )
+    def clickSubmitButton(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            submit_ = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@type="submit"]'))
+            )
 
-        sleep_random()
-        settings_fw.click()
-        sleep_random()
-        print("Navigate to rules done")
-    except Exception as e:
-        print(f"error => {e}")
+            self.sleep_random()
+            submit_.click()
+            self.sleep_random()
+            submit_.send_keys("kulejeqv26@mailforspam.com")
+            self.sleep_random()
 
-def addNewRule(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//span[text()='Add new rule']"))
-        )
+        except Exception as e:
+            print(f"error => {e}")
 
-        sleep_random()
-        link_element.click()
-        sleep_random()
-        print("AddNewRule done")
-    except Exception as e:
-        print(f"error => {e}")
+    def breakFromPassword(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            submit_ = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@id="iCancel"]'))
+            )
 
-def inputRuleName(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@type="text"]'))
-        )
+            self.sleep_random()
+            submit_.click()
+            self.sleep_random()
 
-        sleep_random()
-        link_element.click()
-        sleep_random()
-        link_element.send_keys("ALL MAIl")
-        print("inputRuleName done")
-    except Exception as e:
-        print(f"error => {e}")
+        except Exception as e:
+            print(f"No popup")
 
-def addCondition(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        condition = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Select a condition"]'))
-        )
+    def verifyIdentity(self):
+        self.emailCode()
+        self.sleep_random()
+        self.reEnterConfirmEmail("dfnxwrnm70@mailforspam.com")
+        self.sleep_random()
+        self.clickSubmitButton()
+        self.sleep_random()
+        self.getCode()
 
-        sleep_random()
-        condition.click()
-        sleep_random()
-        print("addCOndition done")
-    except Exception as e:
-        print(f"error => {e}")
+    def switchToggle(self):
+        try:
+            time.sleep(10)
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, "//label[text()='Enable forwarding']"))
+            )
 
-def applyToAll(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        apply_all = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Apply to all messages"]'))
-        )
+            self.sleep_random()
+            link_element.click()
+            print("Forwarding Toggled")
+            self.sleep_random()
+            print("switchToggle done")
+        except Exception as e:
+            print(f"error => {e}")
 
-        sleep_random()
-        apply_all.click()
-        sleep_random()
-        print("applytoall done")
-    except Exception as e:
-        print(f"error => {e}")
+    def forwardTo(self, email):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@type="text"]'))
+            )
 
-def addAction(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        condition = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Select an action"]'))
-        )
+            self.sleep_random()
+            link_element.click()
+            self.sleep_random()
+            link_element.send_keys(email)
+            print("Email Entered For Forwarding")
+            self.sleep_random()
+            print("ForwardTo done")
+        except Exception as e:
+            print(f"error => {e}")
 
-        sleep_random()
-        condition.click()
-        sleep_random()
-        print("addAction Done")
-    except Exception as e:
-        print(f"error => {e}")
+    def closePopUp(self):
+        try:
+            # Wait for the element to be clickable
+            element = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Close']"))
+            )
 
-def actionList(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        apply_all = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Forward to"]'))
-        )
+            # Click on the element
+            element.click()
+            print("Popup Closed")
+        except Exception as e:
+            print(f"Error Occurred => {e}")
 
-        sleep_random()
-        apply_all.click()
-        sleep_random()
-        print("actionList Done")
+    def selectCopy(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 30).until(
+                EC.presence_of_element_located((By.XPATH, "//span[text()='Keep a copy of forwarded messages']"))
+            )
 
-    except Exception as e:
-        print(f"error => {e}")
+            self.sleep_random()
+            link_element.click()
+            self.sleep_random()
+            print("Select Copy done")
+        except Exception as e:
+            print(f"error => {e}")
 
-def enterForwardEmail(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//div[@role="textbox"]'))
-        )
+    def navigateToRules(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            settings_fw = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//button[normalize-space(text())="Rules"]'))
+            )
 
-        sleep_random()
-        link_element.click()
-        sleep_random()
-        link_element.send_keys("allmail@soimail.net")
-        sleep_random()
-        # Locate the element using XPath
-        confirm_element = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//div[@class="MIV76 j7as6"]'))
-        )
+            self.sleep_random()
+            settings_fw.click()
+            self.sleep_random()
+            print("Navigate to rules done")
+        except Exception as e:
+            print(f"error => {e}")
 
-        # Click the element
-        confirm_element.click()
-        sleep_random()
-        print("EnterForwardEmail Done")
-    except Exception as e:
-        print(f"error => {e}")
+    def addNewRule(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, "//span[text()='Add new rule']"))
+            )
 
-def selectInputOption(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@id="iProof0"]'))
-        )
+            self.sleep_random()
+            link_element.click()
+            self.sleep_random()
+            print("AddNewRule done")
+        except Exception as e:
+            print(f"error => {e}")
 
-        sleep_random()
-        link_element.click()
-        sleep_random()
-        print("SelectInputOption Done")
-    except Exception as e:
-        print(f"error => {e}")
+    def inputRuleName(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@type="text"]'))
+            )
 
-def verifyCode(driver):
-    try:
-        # Find the <a> element using XPath with normalize-space()
-        link_element = WebDriverWait(driver, 60).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@id="idSubmit_SAOTCC_Continue"]'))
-        )
+            self.sleep_random()
+            link_element.click()
+            self.sleep_random()
+            link_element.send_keys("ALL MAIl")
+            print("inputRuleName done")
+        except Exception as e:
+            print(f"error => {e}")
 
-        sleep_random()
-        link_element.click()
-        print("Verify Code Done")
-        sleep_random()
-    except Exception as e:
-        print(f"error => {e}")
+    def addCondition(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            condition = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Select a condition"]'))
+            )
 
-def closePopUp(driver):
-    try:
-        # Wait for the element to be clickable
-        element = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Close']"))
-        )
+            self.sleep_random()
+            condition.click()
+            self.sleep_random()
+            print("addCOndition done")
+        except Exception as e:
+            print(f"error => {e}")
 
-        # Click on the element
-        element.click()
-        print("Popup Closed")
-    except Exception as e:
-        print(f"Error Occurred => {e}")
-def enableForwarding(driver, comfirmation_email):
-    sleep_random()
-    closePopUp(driver)
-    sleep_random()
-    goToSettings(driver)
-    sleep_random()
-    settingFw(driver)
-    sleep_random()
+    def applyToAll(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            apply_all = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Apply to all messages"]'))
+            )
 
-    #Asking for verfication again
-    emailCode(driver)
-    sleep_random()
-    reEnterConfirmEmail(driver, comfirmation_email)
-    sleep_random()
-    clickSubmitButton(driver)
-    sleep_random()
+            self.sleep_random()
+            apply_all.click()
+            self.sleep_random()
+            print("applytoall done")
+        except Exception as e:
+            print(f"error => {e}")
 
-    # Get Code Again
-    getCode(driver, 3, comfirmation_email)
-    sleep_random()
-    verifyCode(driver)
-    sleep_random()
-    breakFromPassword(driver)
-    sleep_random()
+    def addAction(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            condition = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Select an action"]'))
+            )
 
-    # Continue with Forwarding
-    sleep_random()
-    closePopUp(driver)
-    sleep_random()
-    switchToggle(driver) #not working
-    sleep_random()
-    forwardTo(driver, "allmail@soimail.net")
-    selectCopy(driver) #not working
+            self.sleep_random()
+            condition.click()
+            self.sleep_random()
+            print("addAction Done")
+        except Exception as e:
+            print(f"error => {e}")
 
-    # Add New Rule
-    navigateToRules(driver)
-    sleep_random()
-    addNewRule(driver)
-    sleep_random()
-    inputRuleName(driver)
-    sleep_random()
-    addCondition(driver)
-    sleep_random()
-    applyToAll(driver)
-    sleep_random()
-    addAction(driver)
-    sleep_random()
-    actionList(driver)
-    enterForwardEmail(driver)
+    def actionList(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            apply_all = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Forward to"]'))
+            )
 
-def getCode(driver, tab, comfirmation_email):
-    newTab(driver, tab)
-    driver.get("https://mailforspam.com")
-    emailForCode(driver, comfirmation_email)
-    sleep_random()
-    clickForCode(driver)
-    sleep_random()
-    security_code = getSecurityCode(driver)
-    sleep_random()
+            self.sleep_random()
+            apply_all.click()
+            self.sleep_random()
+            print("actionList Done")
 
-    # Switch to the new tab
-    driver.switch_to.window(driver.window_handles[1])
+        except Exception as e:
+            print(f"error => {e}")
 
-    sleep_random()
-    enterSecurityCode(driver, security_code)
-    sleep_random()
+    def enterForwardEmail(self, forward_to):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//div[@role="textbox"]'))
+            )
 
+            self.sleep_random()
+            link_element.click()
+            self.sleep_random()
+            link_element.send_keys(forward_to)
+            self.sleep_random()
+            # Locate the element using XPath
+            confirm_element = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//div[@class="MIV76 j7as6"]'))
+            )
 
-def bot_main(email, password, comfirmation_email):
-    try:
-        # Set up Chrome options
-        options = ChromeOptions()
-        # options.add_argument("--headless")  # Optional: Run Chrome in headless mode
-        options.add_argument("--disable-extensions")  # Disable extensions
-        options.binary_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"  # Specify the correct path to Chrome binary
+            # Click the element
+            confirm_element.click()
+            self.sleep_random()
+            print("EnterForwardEmail Done")
+        except Exception as e:
+            print(f"error => {e}")
 
-        # Initialize Chrome browser
-        driver = Chrome(options=options)
+    def selectInputOption(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@id="iProof0"]'))
+            )
 
-        # Open the URL
-        url = "https://outlook.live.com/mail/0/"  # Replace this with your desired URL
-        driver.get(url)
+            self.sleep_random()
+            link_element.click()
+            self.sleep_random()
+            print("SelectInputOption Done")
+        except Exception as e:
+            print(f"error => {e}")
 
-        # Wait for the element to be clickable
-        sign_in = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//a[@data-bi-cn="SignIn"]'))
-        )
+    def verifyCode(self):
+        try:
+            # Find the <a> element using XPath with normalize-space()
+            link_element = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@id="idSubmit_SAOTCC_Continue"]'))
+            )
 
-        if sign_in:
-            sign_in.click()
-            print("Sign in button clicked")
-            sleep_random()
-            switchWindow(driver, 1)
-            sleep_random()
-            inputEmail(driver, email)
-            sleep_random()
-            clickNext(driver)
-            sleep_random()
-            inputPass(driver, password)
-            sleep_random()
-            clickNext(driver)
-            sleep_random()
-            selectInputOption(driver)
-            sleep_random()
-            inputConfirmEmail(driver, comfirmation_email)
-            sleep_random()
-            submitConfirmEmail(driver)
+            self.sleep_random()
+            link_element.click()
+            print("Verify Code Done")
+            self.sleep_random()
+        except Exception as e:
+            print(f"error => {e}")
 
-            # Verification Code
-            getCode(driver, 2, comfirmation_email)
-            submitSecurityCode(driver)
-            sleep_random()
-            staySignedIn(driver)
-            sleep_random()
-            breakFromPassword(driver)
+    def enableForwarding(self, comfirmation_email, forward_to):
+        self.sleep_random()
+        self.closePopUp()
+        self.sleep_random()
+        self.goToSettings()
+        self.sleep_random()
+        self.settingFw()
+        self.sleep_random()
 
-            # Enable Forwarding
-            enableForwarding(driver, comfirmation_email)
-            print("Email entered successfully")
+        # Asking for verification again
+        self.emailCode()
+        self.sleep_random()
+        self.reEnterConfirmEmail(comfirmation_email)
+        self.sleep_random()
+        self.clickSubmitButton()
+        self.sleep_random()
 
-        else:
-            print("no sign in button")
+        # Get Code Again
+        self.getCode(3, comfirmation_email)
+        self.sleep_random()
+        self.verifyCode()
+        self.sleep_random()
+        self.breakFromPassword()
+        self.sleep_random()
 
-        time.sleep(5)
-    except Exception as e:
-        print("An error occurred:", e)
+        # Continue with Forwarding
+        self.sleep_random()
+        self.closePopUp()
+        self.sleep_random()
+        self.switchToggle()
+        self.sleep_random()
+        self.forwardTo(forward_to)
+        self.selectCopy()
 
-    finally:
-        # Close the browser
-        if 'driver' in locals():
-            driver.quit()
+        # Add New Rule
+        self.navigateToRules()
+        self.sleep_random()
+        self.addNewRule()
+        self.sleep_random()
+        self.inputRuleName()
+        self.sleep_random()
+        self.addCondition()
+        self.sleep_random()
+        self.applyToAll()
+        self.sleep_random()
+        self.addAction()
+        self.sleep_random()
+        self.actionList()
+        self.enterForwardEmail(forward_to)
+
+    def getCode(self, tab, comfirmation_email):
+        self.newTab(tab)
+        self.driver.get("https://mailforspam.com")
+        self.emailForCode(comfirmation_email)
+        self.sleep_random()
+        self.clickForCode()
+        self.sleep_random()
+        security_code = self.getSecurityCode()
+        self.sleep_random()
+
+        # Switch to the new tab
+        self.driver.switch_to.window(self.driver.window_handles[1])
+
+        self.sleep_random()
+        self.enterSecurityCode(security_code)
+        self.sleep_random()
+
+    def bot_main(self, email, password, comfirmation_email, forward_to):
+        try:
+            # Open the URL
+            url = "https://outlook.live.com/mail/0/"  # Replace this with your desired URL
+            self.driver.get(url)
+
+            # Wait for the element to be clickable
+            sign_in = WebDriverWait(self.driver, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@data-bi-cn="SignIn"]'))
+            )
+
+            if sign_in:
+                sign_in.click()
+                print("Sign in button clicked")
+                self.sleep_random()
+                self.switchWindow(1)
+                self.sleep_random()
+                self.inputEmail(email)
+                self.sleep_random()
+                self.clickNext()
+                self.sleep_random()
+                self.inputPass(password)
+                self.sleep_random()
+                self.clickNext()
+                self.sleep_random()
+                self.selectInputOption()
+                self.sleep_random()
+                self.inputConfirmEmail(comfirmation_email)
+                self.sleep_random()
+                self.submitConfirmEmail()
+
+                # Verification Code
+                self.getCode(2, comfirmation_email)
+                self.submitSecurityCode()
+                self.sleep_random()
+                self.staySignedIn()
+                self.sleep_random()
+                self.breakFromPassword()
+
+                # Enable Forwarding
+                self.enableForwarding(comfirmation_email, forward_to)
+                print("Email entered successfully")
+
+            else:
+                print("no sign in button")
+
+            time.sleep(5)
+        except Exception as e:
+            print("An error occurred:", e)
+
+        finally:
+            # Close the browser
+            if 'driver' in locals():
+                self.driver.quit()

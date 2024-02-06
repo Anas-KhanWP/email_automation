@@ -1,9 +1,10 @@
-from main import bot_main
+from main import EmailBot
+from undetected_chromedriver import Chrome, ChromeOptions
 import openpyxl
 
 if __name__ == "__main__":
     # Load the Excel file
-    workbook = openpyxl.load_workbook('your_file.xlsx')
+    workbook = openpyxl.load_workbook('email automation_2.xlsx.xlsx')
 
     # Assuming the data is in the first sheet
     sheet = workbook.active
@@ -18,8 +19,18 @@ if __name__ == "__main__":
         data['RECOVERY EMAIL'] = recovery_email
         data['FORWARD TO'] = forward_to
 
+        # Set up Chrome options
+        options = ChromeOptions()
+        # options.add_argument("--headless")  # Optional: Run Chrome in headless mode
+        options.add_argument("--disable-extensions")  # Disable extensions
+        options.binary_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"  # Specify the correct path to Chrome binary
+
+        # Initialize Chrome browser
+        driver = Chrome(options=options)
+
+        EB = EmailBot(driver)
         # Assuming bot_main is defined somewhere in your code
-        bot_main(email, password, recovery_email, forward_to)
+        EB.bot_main(email, password, recovery_email, forward_to)
 
     # Close the workbook after you're done
     workbook.close()
