@@ -6,6 +6,8 @@ if __name__ == "__main__":
     # Load the Excel file into a pandas DataFrame
     df = pd.read_excel('email automation_2.xlsx')
 
+    i = 1
+
     # Iterate over rows in the DataFrame
     for index, row in df.iterrows():
         data = {
@@ -26,10 +28,16 @@ if __name__ == "__main__":
 
         # Initialize Chrome browser
         driver = Chrome(options=options)
+        try:
+            EB = EmailBot(driver)
+            # Assuming bot_main is defined somewhere in your code
+            EB.bot_main(data['EMAILS'], data['PASSWORD'], data['RECOVERY EMAIL'], data['FORWARD TO'])
 
-        EB = EmailBot(driver)
-        # Assuming bot_main is defined somewhere in your code
-        EB.bot_main(data['EMAILS'], data['PASSWORD'], data['RECOVERY EMAIL'], data['FORWARD TO'])
-
-        # Close the driver after iterating over all rows
-        driver.quit()
+            # Close the driver after iterating over all rows
+            driver.quit()
+            print(f"Email forwarding set for {i} Email")
+            i += 1
+        except Exception as e:
+            print("Already Verified, Skipping")
+            driver.quit()
+            continue

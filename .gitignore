@@ -4,6 +4,9 @@ __pycache__/
 *$py.class
 .idea
 
+# Zip files
+email automation.zip
+
 # C extensions
 *.so
 

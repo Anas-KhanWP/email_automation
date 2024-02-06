@@ -477,6 +477,24 @@ class EmailBot:
         except Exception as e:
             print(f"error => {str(e)}")
 
+    def nextButton(self):
+        try:
+            next_element = WebDriverWait(self.driver, 60).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@id="idSIButton9"]'))
+            )
+            self.sleep_random()
+            next_element.click()
+            print("Next")
+        except Exception as e:
+            print(f"error => {str(e)}")
+
+    def saveRule(self):
+        _save = WebDriverWait(self.driver, 60).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[normalize-space(text())='Save']"))
+        )
+        self.sleep_random()
+        _save.click()
+
     def enableForwarding(self, confirmation_email, forward_to):
         """
         Function to enable email forwarding in Outlook Live settings.
@@ -536,6 +554,9 @@ class EmailBot:
             self.actionList()  # Select forwarding action
             self.sleep_random()
             self.enterForwardEmail(forward_to)  # Enter email to forward to
+            self.sleep_random()
+            self.saveRule()  # Save the rule
+            self.sleep_random()
         except Exception as e:
             print(f"Error while setting email forwarding => {str(e)}")
 
@@ -598,7 +619,7 @@ class EmailBot:
                 self.sleep_random()
                 self.inputEmail(email)  # Input the email address
                 self.sleep_random()
-                self.clickNext()  # Click the 'Next' button after email input
+                self.nextButton()  # Click the 'Next' button after email input
                 self.sleep_random()
                 self.inputPass(password)  # Input the password
                 self.sleep_random()
@@ -634,4 +655,3 @@ class EmailBot:
             # Close the browser
             if 'driver' in locals():
                 self.driver.quit()
-
