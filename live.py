@@ -4,7 +4,7 @@ from undetected_chromedriver import Chrome, ChromeOptions
 
 if __name__ == "__main__":
     # Load the Excel file into a pandas DataFrame
-    df = pd.read_excel('email automation_2.xlsx')
+    df = pd.read_excel('test.xlsx')
 
     i = 1
 

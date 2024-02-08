@@ -35,7 +35,9 @@ class EmailBot:
             )
             self.sleep_random()
             input_field.click()
-            input_field.send_keys(email)  # Replace this with your email
+            input_field.send_keys(email)
+            self.sleep_random()
+            input_field.send_keys(Keys.RETURN)
         except Exception as e:
             print(f"Error => {e}")
 
@@ -48,7 +50,10 @@ class EmailBot:
             self.sleep_random()
             input_field.click()
             self.sleep_random()
-            input_field.send_keys(password)  # Replace this with your email
+            input_field.send_keys(password)
+            self.sleep_random()
+            input_field.send_keys(Keys.RETURN)
+            self.sleep_random()
         except Exception as e:
             print(f"Error => {e}")
 
@@ -301,15 +306,15 @@ class EmailBot:
     def closePopUp(self):
         try:
             # Wait for the element to be clickable
-            element = WebDriverWait(self.driver, 30).until(
-                EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Close']"))
+            element = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, '//span[normalize-space(text())="Cancel"]'))
             )
 
             # Click on the element
             element.click()
             print("Popup Closed")
         except Exception as e:
-            print(f"Error Occurred => {e}")
+            print(f"No Reiew Popup")
 
     def selectCopy(self):
         try:
@@ -507,7 +512,11 @@ class EmailBot:
             self.sleep_random()
             self.closePopUp()  # Close any pop-up windows
             self.sleep_random()
+            self.closePopUp()  # Close any pop-up windows
+            self.sleep_random()
             self.goToSettings()  # Navigate to settings
+            self.sleep_random()
+            self.closePopUp()  # Close any pop-up windows
             self.sleep_random()
             self.settingFw()  # Navigate to forwarding settings
             self.sleep_random()
@@ -619,11 +628,7 @@ class EmailBot:
                 self.sleep_random()
                 self.inputEmail(email)  # Input the email address
                 self.sleep_random()
-                self.nextButton()  # Click the 'Next' button after email input
-                self.sleep_random()
                 self.inputPass(password)  # Input the password
-                self.sleep_random()
-                self.clickNext()  # Click the 'Next' button after password input
                 self.sleep_random()
                 self.selectInputOption()  # Select the input option
                 self.sleep_random()
