@@ -19,7 +19,7 @@ Outlook Email Forwarding Automation simplifies the task of setting up email forw
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your_username/outlook-email-forwarding-automation.git
+    git clone https://github.com/Anas-KhanWP/email_automation.git
     ```
 
 2. Navigate to the project directory:
